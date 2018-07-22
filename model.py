@@ -27,39 +27,22 @@ class word_cnn(nn.Module):
         self.embed = nn.Embedding(vocab_size, EMBED_SIZE, padding_idx = PAD_IDX)
         self.conv = nn.ModuleList([nn.Conv2d(1, NUM_FEATURE_MAPS, (i, EMBED_SIZE)) for i in KERNEL_SIZES])
         self.dropout = nn.Dropout(DROPOUT)
-        self.out = nn.Linear(len(KERNEL_SIZES) * NUM_FEATURE_MAPS, num_labels)
+        self.fc = nn.Linear(len(KERNEL_SIZES) * NUM_FEATURE_MAPS, num_labels)
+        self.softmax = nn.LogSoftmax(1)
 
         if CUDA:
             self = self.cuda()
 
     def forward(self, x):
-
-        # embedding
         x = self.embed(x) # [batch_size (N), seq_len (H), embed_size (W)]
         x = x.unsqueeze(1) # [N, in_channels (Ci), H, W]
-
-        # convolution
         h = [conv(x) for conv in self.conv] # [N, out_channels (Co), H, W] * num_kernels (K)
-
-        # ReLU
-        h = [F.relu(k) for k in h]
-        h = [k.squeeze(3) for k in h] # [N, Co, H] * K
-
-        # max pooling
+        h = [F.relu(k).squeeze(3) for k in h] # [N, Co, H] * K
         h = [F.max_pool1d(k, k.size(2)).squeeze(2) for k in h] # [N, Co] * K
-
-        # concatenation
         h = torch.cat(h, 1) # [N, Co * K]
-
-        # dropout
         h = self.dropout(h)
-
-        # fully connected layer 
-        h = self.out(h)
-
-        # regularization
-        y = F.log_softmax(h, 1)
-
+        h = self.fc(h) # fully connected layer 
+        y = self.softmax(h)
         return y
 
 def LongTensor(*args):
