@@ -33,4 +33,4 @@ python evaluate.py model.epochN word_to_idx tag_to_idx test_data
 
 ## References
 
-Yoon Kim. 2014. [Convolutional Neural Networks for Sentence Classification.](https://arxiv.org/abs/1408.5882) arXiv:1408.5882 [cs.CL].
+Yoon Kim. 2014. [Convolutional Neural Networks for Sentence Classification.](https://arxiv.org/abs/1408.5882) arXiv:1408.5882.
