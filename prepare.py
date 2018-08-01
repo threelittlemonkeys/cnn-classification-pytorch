@@ -3,8 +3,8 @@ import re
 from model import PAD, PAD_IDX
 from utils import tokenize
 
-MIN_LENGTH = 5 # >= KERNEL_SIZES
-MAX_LENGTH = 50
+MIN_LEN = 5 # >= KERNEL_SIZES
+MAX_LEN = 50
 
 def load_data():
     data = []
@@ -15,7 +15,7 @@ def load_data():
         x, y = line.split("\t")
         x = tokenize(x, "char")
         y = y.strip()
-        if len(x) < MIN_LENGTH or len(x) > MAX_LENGTH:
+        if len(x) < MIN_LEN or len(x) > MAX_LEN:
             continue
         for w in x:
             if w not in word_to_idx:
