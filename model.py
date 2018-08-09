@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable as Var
 
 BATCH_SIZE = 64
 EMBED_SIZE = 300
