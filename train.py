@@ -24,7 +24,7 @@ def load_data():
         batch_x.append(seq + pad)
         batch_y.append(label)
         if len(batch_x) == BATCH_SIZE:
-            data.append((Var(LongTensor(batch_x)), Var(LongTensor(batch_y)))) # append a mini-batch
+            data.append((LongTensor(batch_x), LongTensor(batch_y))) # append a mini-batch
             batch_x = []
             batch_y = []
     fo.close()
