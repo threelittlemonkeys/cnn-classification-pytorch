@@ -1,6 +1,6 @@
 # CNNs for Text Classification in PyTorch
 
-Word-based Convolutional Neural Networks (CNNs) for text classification in PyTorch.
+A PyTorch implementation of Convolutional Neural Networks (CNNs) for text classification.
 
 ## Usage
 
