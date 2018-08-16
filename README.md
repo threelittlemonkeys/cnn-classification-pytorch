@@ -1,4 +1,4 @@
-# Text CNNs in PyTorch
+# CNNs for Text Classification in PyTorch
 
 Word-based Convolutional Neural Networks (CNNs) for text classification in PyTorch.
 
