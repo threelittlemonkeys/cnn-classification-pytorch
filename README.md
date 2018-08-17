@@ -1,4 +1,4 @@
-# CNNs for Text Classification in PyTorch
+# CNNs for Text Classification
 
 A PyTorch implementation of Convolutional Neural Networks (CNNs) for text classification.
 
