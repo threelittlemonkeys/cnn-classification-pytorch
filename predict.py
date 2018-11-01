@@ -46,23 +46,17 @@ def predict(lb = False):
         x = [word_to_idx[i] if i in word_to_idx else UNK_IDX for i in x]
         data.append([line, x, y])
         if len(data) == BATCH_SIZE:
-            data = run_model(model, idx_to_tag, data)
-            if lb:
-                result.extend(data)
-            else:
-                for x, _, y in data:
-                    print((x, y))
+            result.extend(run_model(model, idx_to_tag, data))
             data = []
     fo.close()
     if len(data):
-        data = run_model(model, idx_to_tag, data)
-        if lb:
-            result.extend(data)
-        else:
-            for x, _, y in data:
-                print((x, y))
+        result.extend(run_model(model, idx_to_tag, data))
     if lb:
         return result
+    else:
+        print()
+        for x, _, y in result:
+            print((x, y))
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
