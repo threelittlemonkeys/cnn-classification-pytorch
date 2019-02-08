@@ -19,7 +19,7 @@ def load_data():
         seq = [int(i) for i in line.split(" ")]
         label = seq.pop()
         if len(batch_x) == 0: # the first line has the maximum sequence length
-            batch_len = len(seq)
+            batch_len = max(len(seq), max(KERNEL_SIZES))
         batch_x.append([SOS_IDX] + seq + [EOS_IDX] + [PAD_IDX] * (batch_len - len(seq)))
         batch_y.append(label)
         if len(batch_x) == BATCH_SIZE:
@@ -36,7 +36,7 @@ def train():
     data, word_to_idx, tag_to_idx = load_data()
     model = cnn(len(word_to_idx), len(tag_to_idx))
     print(model)
-    optim = torch.optim.SGD(model.parameters(), lr = LEARNING_RATE, weight_decay = WEIGHT_DECAY)
+    optim = torch.optim.Adam(model.parameters(), lr = LEARNING_RATE)
     epoch = load_checkpoint(sys.argv[1], model) if isfile(sys.argv[1]) else 0
     filename = re.sub("\.epoch[0-9]+$", "", sys.argv[1])
     print("training model...")

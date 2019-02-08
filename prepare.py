@@ -21,7 +21,7 @@ def load_data():
         if y not in tag_to_idx:
             tag_to_idx[y] = len(tag_to_idx)
         data.append([str(word_to_idx[w]) for w in x] + [str(tag_to_idx[y])])
-    data.sort(key = lambda x: -len(x))
+    data.sort(key = len, reverse = True)
     fo.close()
     return data, word_to_idx, tag_to_idx
 
