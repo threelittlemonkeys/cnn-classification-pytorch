@@ -1,4 +1,5 @@
 import re
+import torch
 from parameters import *
 
 def normalize(x):
@@ -13,9 +14,6 @@ def tokenize(x, unit):
         return x
     if unit == "word":
         return x.split(" ")
-
-def idx_to_tkn(tkn_to_idx):
-    return [x for x, _ in sorted(tkn_to_idx.items(), key = lambda x: x[1])]
 
 def save_data(filename, data):
     fo = open(filename, "w")
@@ -50,7 +48,6 @@ def save_tkn_to_idx(filename, tkn_to_idx):
     fo.close()
 
 def load_checkpoint(filename, model = None):
-    import torch
     print("loading model...")
     checkpoint = torch.load(filename)
     model.load_state_dict(checkpoint["state_dict"])
@@ -60,7 +57,6 @@ def load_checkpoint(filename, model = None):
     return epoch
 
 def save_checkpoint(filename, model, epoch, loss, time):
-    import torch
     print("epoch = %d, loss = %f, time = %f" % (epoch, loss, time))
     if filename and model:
         print("saving model...")
@@ -71,13 +67,35 @@ def save_checkpoint(filename, model, epoch, loss, time):
         torch.save(checkpoint, filename + ".epoch%d" % epoch)
         print("saved model at epoch %d" % epoch)
 
-def batchify(xc, xw, minlen = 0):
+def Tensor(*args):
+    x = torch.Tensor(*args)
+    return x.cuda() if CUDA else x
+
+def LongTensor(*args):
+    x = torch.LongTensor(*args)
+    return x.cuda() if CUDA else x
+
+def zeros(*args):
+    x = torch.zeros(*args)
+    return x.cuda() if CUDA else x
+
+def maskset(x):
+    mask = x.data.eq(PAD_IDX)
+    return (mask, x.size(1) - mask.sum(1)) # set of mask and lengths
+
+def idx_to_tkn(tkn_to_idx):
+    return [x for x, _ in sorted(tkn_to_idx.items(), key = lambda x: x[1])]
+
+def batchify(xc, xw, minlen = 0, sos = True, eos = True):
     xc_len = max(minlen, max(len(w) for x in xc for w in x))
     xw_len = max(minlen, max(len(x) for x in xw))
+    pad = [[PAD_IDX] * (xc_len + 2)]
     xc = [[[SOS_IDX] + w + [EOS_IDX] + [PAD_IDX] * (xc_len - len(w)) for w in x] for x in xc]
-    xc = [x + [[PAD_IDX] * (xc_len + 2)] * (xw_len - len(x) + 2) for x in xc]
-    xw = [[SOS_IDX] + list(x) + [EOS_IDX] + [PAD_IDX] * (xw_len - len(x)) for x in xw]
-    return xc, xw
+    xc = [(pad if sos else []) + x + (pad * (xw_len - len(x) + eos)) for x in xc]
+    sos = [SOS_IDX] if sos else []
+    eos = [EOS_IDX] if eos else []
+    xw = [sos + list(x) + eos + [PAD_IDX] * (xw_len - len(x)) for x in xw]
+    return LongTensor(xc), LongTensor(xw)
 
 def heatmap(m, x, itw):
     y = []
