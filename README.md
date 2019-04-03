@@ -38,3 +38,5 @@ python evaluate.py model.epochN char_to_idx word_to_idx tag_to_idx test_data
 ## References
 
 Yoon Kim. 2014. [Convolutional Neural Networks for Sentence Classification.](https://arxiv.org/abs/1408.5882) arXiv:1408.5882.
+
+Yunlun Yang, Yunhai Tong, Shulei Ma, Zhi-Hong Deng. 2016. [A Position Encoding Convolutional Neural Network Based on Dependency Tree for Relation Classification.](https://aclweb.org/anthology/D16-1007) In EMNLP.
