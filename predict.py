@@ -35,7 +35,7 @@ def predict(filename, model, cti, wti, itt):
     fo = open(filename)
     for idx, line in enumerate(fo):
         line = line.strip()
-        line, y = line.split("\t") if line.count("\t") else [line, None]
+        x, y = line.split("\t") if line.count("\t") else [line, None]
         x = tokenize(line, UNIT)
         xc = [[cti[c] if c in cti else UNK_IDX for c in w] for w in x]
         xw = [wti[w] if w in wti else UNK_IDX for w in x]
