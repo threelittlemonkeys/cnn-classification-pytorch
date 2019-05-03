@@ -20,7 +20,7 @@ def load_data():
         bxw.append(xw)
         by.append(int(y[0]))
         if len(by) == BATCH_SIZE:
-            bxc, bxw = batchify(bxc, bxw, max(KERNEL_SIZES))
+            bxc, bxw = batchify(bxc, bxw, max(KERNEL_SIZES), True, True)
             data.append((bxc, bxw, LongTensor(by)))
             bxc = []
             bxw = []
@@ -47,8 +47,7 @@ def train():
             loss = F.nll_loss(model(xc, xw), y) # forward pass and compute loss
             loss.backward() # compute gradients
             optim.step() # update parameters
-            loss = loss.tolist()
-            loss_sum += loss
+            loss_sum += loss.item()
         timer = time.time() - timer
         loss_sum /= len(data)
         if ei % SAVE_EVERY and ei != epoch + num_epochs:

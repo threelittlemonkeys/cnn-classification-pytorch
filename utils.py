@@ -91,7 +91,7 @@ def maskset(x):
 def idx_to_tkn(tkn_to_idx):
     return [x for x, _ in sorted(tkn_to_idx.items(), key = lambda x: x[1])]
 
-def batchify(xc, xw, minlen = 0, sos = True, eos = True):
+def batchify(xc, xw, minlen = 0, sos = False, eos = False):
     xw_len = max(minlen, max(len(x) for x in xw))
     if xc:
         xc_len = max(minlen, max(len(w) for x in xc for w in x))
@@ -104,21 +104,15 @@ def batchify(xc, xw, minlen = 0, sos = True, eos = True):
     xw = [sos + list(x) + eos + [PAD_IDX] * (xw_len - len(x)) for x in xw]
     return xc, LongTensor(xw)
 
-def heatmap(m, x, itw):
-    y = []
-    y.append([itw[c] for c in x]) # input
-    for v in m: # weights
-        y.append([x for x in v[:len(x)]])
-    return y
-
-def mat2csv(m, ch = True, rh = False, nd = NUM_DIGITS, delim ="\t"):
+def heatmap(m, x, itw, ch = True, rh = False, sos = False, eos = False): # attention heatmap
     f = "%%.%df" % nd
+    m = [([SOS] if sos else []) + [itw[i] for i in x] + ([EOS] if eos else [])] + m
     if ch: # column header
-        csv = delim.join([x for x in m[0]]) + "\n" # source sequence
+        csv = DELIM.join([x for x in m[0]]) + "\n" # source sequence
     for row in m[ch:]:
         if rh: # row header
-            csv += row[0] + delim # target sequence
-        csv += delim.join([f % x for x in row[rh:]]) + "\n"
+            csv += row[0] + DELIM # target sequence
+        csv += DELIM.join([f % x for x in row[rh:]]) + "\n"
     return csv
 
 def f1(p, r):
