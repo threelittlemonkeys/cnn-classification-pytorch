@@ -105,7 +105,7 @@ def batchify(xc, xw, minlen = 0, sos = False, eos = False):
     return xc, LongTensor(xw)
 
 def heatmap(m, x, itw, ch = True, rh = False, sos = False, eos = False): # attention heatmap
-    f = "%%.%df" % nd
+    f = "%%.%df" % NUM_DIGITS
     m = [([SOS] if sos else []) + [itw[i] for i in x] + ([EOS] if eos else [])] + m
     if ch: # column header
         csv = DELIM.join([x for x in m[0]]) + "\n" # source sequence
