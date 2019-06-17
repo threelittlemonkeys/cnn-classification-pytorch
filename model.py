@@ -1,5 +1,6 @@
 from utils import *
 from embedding import embed
+from sae import sae
 
 CUDA = torch.cuda.is_available()
 torch.manual_seed(0) # for reproducibility
