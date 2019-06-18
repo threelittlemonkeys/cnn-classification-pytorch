@@ -21,7 +21,7 @@ class sae(nn.Module): # self attentive encoder
         h = x + self.pe(x.size(1))
         for layer in self.layers:
             h = layer(h, mask[0])
-        return y
+        return h
 
 class pos_encoder(nn.Module): # positional encoder
     def __init__(self, dim, maxlen = 1000):

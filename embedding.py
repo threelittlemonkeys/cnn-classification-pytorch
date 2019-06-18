@@ -1,4 +1,5 @@
 from utils import *
+from sae import *
 
 class embed(nn.Module):
     def __init__(self, char_vocab_size, word_vocab_size, embed_size):
@@ -10,13 +11,15 @@ class embed(nn.Module):
             self.char_embed = embed_cnn(char_vocab_size, dim)
         if "lookup" in EMBED:
             self.word_embed = nn.Embedding(word_vocab_size, dim, padding_idx = PAD_IDX)
+        if "sae" in EMBED:
+            self.word_embed = sae(word_vocab_size, dim)
 
         if CUDA:
             self = self.cuda()
 
     def forward(self, xc, xw):
         hc = self.char_embed(xc) if "char-cnn" in EMBED else None
-        hw = self.word_embed(xw) if "lookup" in EMBED else None
+        hw = self.word_embed(xw) if "lookup" in EMBED or "sae" in EMBED else None
         h = torch.cat([h for h in [hc, hw] if type(h) == torch.Tensor], 2)
         return h
 
