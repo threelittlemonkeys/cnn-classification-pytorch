@@ -41,4 +41,6 @@ Yoon Kim. 2014. [Convolutional Neural Networks for Sentence Classification.](htt
 
 Yunlun Yang, Yunhai Tong, Shulei Ma, Zhi-Hong Deng. 2016. [A Position Encoding Convolutional Neural Network Based on Dependency Tree for Relation Classification.](https://aclweb.org/anthology/D16-1007) In EMNLP.
 
+Zenan Zhai, Dat Quoc Nguyen, Karin Verspoor. 2018. [Comparing CNN and LSTM character-level embeddings in BiLSTM-CRF models for chemical and disease named entity recognition.](https://www.aclweb.org/anthology/W18-5605) In Proceedings of the 9th International Workshop on Health Text Mining and Information Analysis (LOUHI).
+
 Xiang Zhang, Junbo Zhao, Yann LeCun. 2015. [Character-level Convolutional Networks for Text Classification.](https://arxiv.org/abs/1509.01626) arXiv:1509.01626.
