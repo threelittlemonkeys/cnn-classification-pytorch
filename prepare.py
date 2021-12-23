@@ -8,7 +8,7 @@ def load_data():
     fo = open(sys.argv[1])
     for line in fo:
         x, y = line.split("\t")
-        x = tokenize(x, UNIT)
+        x = tokenize(x)
         y = y.strip()
         for w in x:
             for c in w:

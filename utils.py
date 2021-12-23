@@ -14,11 +14,10 @@ def normalize(x):
     x = x.lower()
     return x
 
-def tokenize(x, unit):
-    x = normalize(x)
-    if unit == "char":
-        return x
-    if unit == "word":
+def tokenize(x):
+    if UNIT == "char":
+        return list(re.sub(" ", "", x))
+    if UNIT == "word":
         return x.split(" ")
 
 def save_data(filename, data):
@@ -74,44 +73,12 @@ def save_checkpoint(filename, model, epoch, loss, time):
         torch.save(checkpoint, filename + ".epoch%d" % epoch)
         print("saved model at epoch %d" % epoch)
 
-def cudify(f):
-    return lambda *x: f(*x).cuda() if CUDA else f(*x)
-
-Tensor = cudify(torch.Tensor)
-LongTensor = cudify(torch.LongTensor)
-zeros = cudify(torch.zeros)
-
 def maskset(x):
     mask = x.eq(PAD_IDX)
     return (mask, x.size(1) - mask.sum(1)) # set of mask and lengths
 
 def idx_to_tkn(tkn_to_idx):
     return [x for x, _ in sorted(tkn_to_idx.items(), key = lambda x: x[1])]
-
-def batchify(xc, xw, sos = False, eos = False, minlen = 0):
-    xw_len = max(minlen, max(len(x) for x in xw))
-    if xc:
-        xc_len = max(minlen, max(len(w) for x in xc for w in x))
-        pad = [[PAD_IDX] * (xc_len + 2)]
-        xc = [[[SOS_IDX] + w + [EOS_IDX] + [PAD_IDX] * (xc_len - len(w)) for w in x] for x in xc]
-        xc = [(pad if sos else []) + x + (pad * (xw_len - len(x) + eos)) for x in xc]
-        xc = LongTensor(xc)
-    sos = [SOS_IDX] if sos else []
-    eos = [EOS_IDX] if eos else []
-    xw = [sos + list(x) + eos + [PAD_IDX] * (xw_len - len(x)) for x in xw]
-    return xc, LongTensor(xw)
-
-def heatmap(m, x, itw, ch = True, rh = False, sos = False, eos = False): # attention heatmap
-    f = "%%.%df" % NUM_DIGITS
-    m = [v[:len(x) + sos + eos] for v in m] # remove padding
-    m = [([SOS] if sos else []) + [itw[i] for i in x] + ([EOS] if eos else [])] + m
-    if ch: # column header
-        csv = DELIM.join([x for x in m[0]]) + "\n" # source sequence
-    for row in m[ch:]:
-        if rh: # row header
-            csv += row[0] + DELIM # target sequence
-        csv += DELIM.join([f % x for x in row[rh:]]) + "\n"
-    return csv
 
 def f1(p, r):
     return 2 * p * r / (p + r) if p + r else 0

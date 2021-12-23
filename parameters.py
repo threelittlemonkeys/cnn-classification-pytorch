@@ -26,6 +26,11 @@ UNK_IDX = 3
 
 CUDA = torch.cuda.is_available()
 torch.manual_seed(0) # for reproducibility
+# torch.cuda.set_device(0)
+
+Tensor = torch.cuda.FloatTensor if CUDA else torch.FloatTensor
+LongTensor = torch.cuda.LongTensor if CUDA else torch.LongTensor
+zeros = lambda *x: torch.zeros(*x).cuda() if CUDA else torch.zeros
 
 DELIM = "\t" # delimiter
 KEEP_IDX = False # use the existing indices when preparing additional data

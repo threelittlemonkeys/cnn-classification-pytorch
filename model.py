@@ -6,7 +6,7 @@ class cnn(nn.Module):
         super().__init__()
 
         # architecture
-        self.embed = embed(char_vocab_size, word_vocab_size)
+        self.embed = embed(EMBED, char_vocab_size, word_vocab_size)
         self.conv = nn.ModuleList([nn.Conv2d(
             in_channels = 1, # Ci
             out_channels = NUM_FEATMAPS, # Co
@@ -20,8 +20,8 @@ class cnn(nn.Module):
             self = self.cuda()
 
     def forward(self, xc, xw):
-        x = self.embed(xc, xw) # [batch_size (B), seq_len (L), embed_size (H)]
-        x = x.unsqueeze(1) # [B, Ci, L, H]
+        x = self.embed(xc, xw) # [seq_len (L), batch_size (B), embed_size (H)]
+        x = x.transpose(0, 1).unsqueeze(1) # [B, Ci, L, H]
         h = [conv(x) for conv in self.conv] # [B, Co, L, 1] * K
         h = [F.relu(k).squeeze(3) for k in h] # [B, Co, L] * K
         h = [F.max_pool1d(k, k.size(2)).squeeze(2) for k in h] # [B, Co] * K
