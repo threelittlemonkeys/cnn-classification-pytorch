@@ -40,7 +40,8 @@ def train(args):
         timer = time()
         for xc, xw, y0 in batch:
             model.zero_grad()
-            loss = F.nll_loss(model(xc, xw), y0) # forward pass and compute loss
+            y1 = model(xc, xw)
+            loss = F.nll_loss(y1, y0) # forward pass and compute loss
             loss.backward() # compute gradients
             optim.step() # update parameters
             loss_sum += loss.item()
