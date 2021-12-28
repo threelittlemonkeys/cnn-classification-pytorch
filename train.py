@@ -33,7 +33,7 @@ def train(args):
     optim = torch.optim.Adam(model.parameters(), lr = LEARNING_RATE)
     print(model)
     epoch = load_checkpoint(args[0], model) if isfile(args[0]) else 0
-    filename = re.sub("\.epoch[0-9]+$", "", args[1])
+    filename = re.sub("\.epoch[0-9]+$", "", args[0])
     print("training model...")
     for ei in range(epoch + 1, epoch + num_epochs + 1):
         loss_sum = 0
