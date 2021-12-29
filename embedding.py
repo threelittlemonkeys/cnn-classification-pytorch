@@ -8,15 +8,19 @@ class embed(nn.Module):
         self.hre = hre # hierarchical recurrent encoding
 
         # architecture
+        self.char_embed = None 
+        self.word_embed = None 
         for model, dim in self.ls.items():
             if cti_size > 0:
-                if model == "char-cnn":
+                if model == "char-lookup":
+                    self.char_embed = self.lookup(cti_size, dim)
+                elif model == "char-cnn":
                     self.char_embed = self.cnn(cti_size, dim)
                 elif model == "char-rnn":
                     self.char_embed = self.rnn(cti_size, dim)
             if wti_size > 0:
                 if model == "lookup":
-                    self.word_embed = nn.Embedding(wti_size, dim, padding_idx = PAD_IDX)
+                    self.char_embed = self.lookup(wti_size, dim)
                 elif model == "sae":
                     self.word_embed = self.sae(wti_size, dim)
         if self.hre:
@@ -25,14 +29,26 @@ class embed(nn.Module):
 
     def forward(self, xc, xw):
         hc, hw = None, None
-        if type(xc) == torch.Tensor and ("char-cnn" in self.ls or "char-rnn" in self.ls):
+        if self.char_embed:
             hc = self.char_embed(xc)
-        if type(xw) == torch.Tensor and ("lookup" in self.ls or "sae" in self.ls):
+        if self.word_embed:
             hw = self.word_embed(xw)
         h = torch.cat([h for h in [hc, hw] if type(h) == torch.Tensor], 2)
         if self.hre:
             h = self.sent_embed(h)
         return h
+
+    class lookup(nn.Module):
+        def __init__(self, vocab_size, embed_size):
+            super().__init__()
+            self.embed = nn.Embedding(vocab_size, embed_size, padding_idx = PAD_IDX)
+
+        def forward(self, x):
+            b = x.size(1)
+            x = x.reshape(-1, x.size(2)) # [Ls * B, Lw]
+            h = self.embed(x)
+            h = h.view(-1, b, h.size(2)) # [Ls, B, H]
+            return h
 
     class cnn(nn.Module):
         def __init__(self, vocab_size, embed_size):
