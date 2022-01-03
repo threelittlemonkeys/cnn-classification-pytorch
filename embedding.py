@@ -3,7 +3,7 @@ from utils import *
 class embed(nn.Module):
     def __init__(self, ls, cti_size, wti_size, hre = False):
         super().__init__()
-        self.dim = 0
+        self.dim = sum(ls.values())
         self.hre = hre # hierarchical recurrent encoding
 
         # architecture
@@ -14,7 +14,6 @@ class embed(nn.Module):
                 self.char_embed = getattr(self, model)(cti_size, dim)
             if model in ("lookup", "sae"):
                 self.word_embed = getattr(self, model)(wti_size, dim)
-            self.dim += dim
         if self.hre:
             self.sent_embed = self.rnn(self.dim, self.dim, True)
         self = self.cuda() if CUDA else self
