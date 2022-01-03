@@ -35,11 +35,7 @@ class embed(nn.Module):
             self.embed = nn.Embedding(vocab_size, embed_size, padding_idx = PAD_IDX)
 
         def forward(self, x):
-            b = x.size(1)
-            x = x.reshape(-1, x.size(2)) # [Ls * B, Lw]
-            h = self.embed(x)
-            h = h.view(-1, b, h.size(2)) # [Ls, B, H]
-            return h
+            return self.embed(x) # [Ls, B, H]
 
     class cnn(nn.Module):
         def __init__(self, vocab_size, embed_size):
