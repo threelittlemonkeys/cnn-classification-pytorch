@@ -2,7 +2,9 @@ from utils import *
 from embedding import embed
 
 class cnn(nn.Module):
+
     def __init__(self, char_vocab_size, word_vocab_size, num_labels):
+
         super().__init__()
 
         # architecture
@@ -20,6 +22,7 @@ class cnn(nn.Module):
             self = self.cuda()
 
     def forward(self, xc, xw):
+
         x = self.embed(xc, xw) # [seq_len (L), batch_size (B), embed_size (H)]
         x = x.transpose(0, 1).unsqueeze(1) # [B, Ci, L, H]
         h = [conv(x) for conv in self.conv] # [B, Co, L, 1] * K
@@ -29,4 +32,5 @@ class cnn(nn.Module):
         h = self.dropout(h)
         h = self.fc(h) # fully connected layer
         y = self.softmax(h)
+
         return y
