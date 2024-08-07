@@ -6,8 +6,8 @@ import torchvision
 import torchvision.transforms as transforms
 
 BATCH_SIZE = 64
-IMG_WIDTH = 70
-IMG_HEIGHT = 30
+IMG_WIDTH = 32
+IMG_HEIGHT = 32
 LEARNING_RATE = 1e-4
 VERBOSE = False
 EVAL_EVERY = 10
