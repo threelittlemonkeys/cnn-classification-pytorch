@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as transforms
 
-BATCH_SIZE = 16
+BATCH_SIZE = 64
 IMG_WIDTH = 70
 IMG_HEIGHT = 30
 LEARNING_RATE = 1e-4

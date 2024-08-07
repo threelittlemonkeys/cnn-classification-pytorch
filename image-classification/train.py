@@ -19,7 +19,7 @@ def load_data(args):
 
     with open(args[1], "r") as fo:
         for line in fo:
-            x, y = line.strip().split(" ")
+            x, y = line.strip().split("\t")
             x = transform(Image.open(x))
             y = tti[y]
             data.append((x, y))

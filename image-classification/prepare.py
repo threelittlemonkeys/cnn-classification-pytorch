@@ -4,7 +4,7 @@ def load_data():
     tti = {} # tag_to_idx
     fo = open(sys.argv[1])
     for line in fo:
-        x, y = line.split(" ")
+        x, y = line.split("\t")
         y = y.strip()
         if y not in tti:
             tti[y] = len(tti)

@@ -7,10 +7,10 @@ class cnn(nn.Module):
         super().__init__()
 
         # architecture
-        self.conv1 = nn.Conv2d(3, 9, 5, padding = "same")
-        self.conv2 = nn.Conv2d(9, 27, 5, padding = "same")
+        self.conv1 = nn.Conv2d(3, 27, 5, padding = "same")
+        self.conv2 = nn.Conv2d(27, 81, 5, padding = "same")
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc = nn.Linear((IMG_WIDTH // 2 // 2) * (IMG_HEIGHT // 2 // 2) * 27, num_labels)
+        self.fc = nn.Linear((IMG_WIDTH // 2 // 2) * (IMG_HEIGHT // 2 // 2) * 81, num_labels)
         self.softmax = nn.LogSoftmax(1)
 
         if CUDA:

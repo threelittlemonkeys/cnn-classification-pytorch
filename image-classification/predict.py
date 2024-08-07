@@ -36,7 +36,7 @@ def predict(model, itt, filename):
 
     with open(filename) as fo:
         for line in fo:
-            x0, *y0 = line.strip().split(" ")
+            x0, *y0 = line.strip().split("\t")
             y0 = y0[0] if y0 else ""
             x1 = transform(Image.open(x0))
             data.append((x0, x1, y0))
