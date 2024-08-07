@@ -16,6 +16,7 @@ SAVE_EVERY = 10
 CUDA = torch.cuda.is_available()
 torch.manual_seed(0) # for reproducibility
 # torch.cuda.set_device(0)
+DEVICE = torch.device("cuda" if CUDA else "cpu")
 
 t_Tensor = lambda *x: torch.FloatTensor(*x).cuda() if CUDA else torch.FloatTensor(*x)
 t_LongTensor = lambda *x: torch.LongTensor(*x).cuda() if CUDA else torch.LongTensor(*x)

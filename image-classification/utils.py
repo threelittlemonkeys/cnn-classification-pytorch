@@ -37,7 +37,7 @@ def save_tkn_to_idx(filename, tkn_to_idx):
 def load_checkpoint(filename, model = None):
 
     print("loading %s" % filename)
-    checkpoint = torch.load(filename)
+    checkpoint = torch.load(filename, map_location = DEVICE)
     if model:
         model.load_state_dict(checkpoint["state_dict"])
     epoch = checkpoint["epoch"]
