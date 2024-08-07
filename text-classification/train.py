@@ -21,10 +21,9 @@ def load_data(args):
             data.append_row()
             data.append_item(xc = xc, xw = xw, y0 = int(y[0]))
 
-    for _batch in data.split():
-        xc, xw, y0, lens = _batch.xc, _batch.xw, _batch.y0, _batch.lens
-        xc, xw = data.tensor(bc = xc, bw = xw, sos = True, eos = True)
-        _, y0 = data.tensor(bw = y0)
+    for _batch in data.batchify(BATCH_SIZE):
+        xc, xw = data.to_tensor(_batch.xc, _batch.xw, sos = True, eos = True)
+        _, y0 = data.to_tensor(None, _batch.y0)
         batch.append((xc, xw, y0))
 
     print(f"data size: {len(data.y0)}")
@@ -41,7 +40,7 @@ def train(args):
     print(model)
 
     epoch = load_checkpoint(args[0], model) if isfile(args[0]) else 0
-    filename = re.sub("\.epoch[0-9]+$", "", args[0])
+    filename = re.sub("\\.epoch[0-9]+$", "", args[0])
 
     print("training model")
 

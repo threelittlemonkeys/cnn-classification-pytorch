@@ -91,9 +91,9 @@ class embed(nn.Module):
         def init_state(self, b): # initialize RNN states
             n = self.num_layers * self.num_dirs
             h = self.dim // self.num_dirs
-            hs = zeros(n, b, h) # hidden state
+            hs = t_zeros(n, b, h) # hidden state
             if self.rnn_type == "LSTM":
-                cs = zeros(n, b, h) # LSTM cell state
+                cs = t_zeros(n, b, h) # LSTM cell state
                 return (hs, cs)
             return hs
 
@@ -130,7 +130,7 @@ class embed(nn.Module):
 
         @staticmethod
         def pos_encoding(dim, maxlen = 1000): # positional encoding
-            pe = Tensor(maxlen, dim)
+            pe = t_Tensor(maxlen, dim)
             pos = torch.arange(0, maxlen, 1.).unsqueeze(1)
             k = torch.exp(-np.log(10000) * torch.arange(0, dim, 2.) / dim)
             pe[:, 0::2] = torch.sin(pos * k)

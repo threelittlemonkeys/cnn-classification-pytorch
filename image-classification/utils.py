@@ -5,30 +5,6 @@ from os.path import isfile
 from parameters import *
 from collections import defaultdict
 
-def normalize(x):
-
-    # x = re.sub("[\uAC00-\uD7A3]+", "\uAC00", x) £ convert Hangeul to 가
-    # x = re.sub("[\u3040-\u30FF]+", "\u3042", x) # convert Hiragana and Katakana to あ
-    # x = re.sub("[\u4E00-\u9FFF]+", "\u6F22", x) # convert CJK unified ideographs to 漢
-    x = re.sub("\\s+", " ", x)
-    x = re.sub("^ | $", "", x)
-    x = x.lower()
-    return x
-
-def tokenize(x):
-
-    if UNIT == "char":
-        return list(re.sub(" ", "", x))
-    if UNIT == "word":
-        return x.split(" ")
-
-def save_data(filename, data):
-
-    fo = open(filename, "w")
-    for seq in data:
-        fo.write(" ".join(seq) + "\n")
-    fo.close()
-
 def load_tkn_to_idx(filename):
 
     print("loading %s" % filename)
