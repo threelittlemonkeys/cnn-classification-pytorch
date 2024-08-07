@@ -30,8 +30,7 @@ torch.manual_seed(0) # for reproducibility
 
 t_Tensor = lambda *x: torch.FloatTensor(*x).cuda() if CUDA else torch.FloatTensor(*x)
 t_LongTensor = lambda *x: torch.LongTensor(*x).cuda() if CUDA else torch.LongTensor(*x)
-t_zeros = lambda *x: torch.zeros(*x).cuda() if CUDA else torch.zeros
+t_zeros = lambda *x: torch.zeros(*x).cuda() if CUDA else torch.zeros(*x)
 
-DELIM = "\t" # delimiter
 KEEP_IDX = False # use the existing indices when preparing additional data
 NUM_DIGITS = 4 # number of digits to print
