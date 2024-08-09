@@ -5,15 +5,20 @@ from PIL import Image
 def load_model():
 
     itt = load_idx_to_tkn(sys.argv[2]) # idx_to_tag
+
     model = cnn(len(itt))
     print(model)
+
     load_checkpoint(sys.argv[1], model)
+
     return model, itt
+
 
 def run_model(model, data, itt):
 
     with torch.no_grad():
         model.eval()
+
         for idx in range(0, len(data), BATCH_SIZE):
             x0, x1, y0 = zip(*data[idx:idx + BATCH_SIZE])
             x1 = t_stack(x1)
